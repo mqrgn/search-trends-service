@@ -1,0 +1,18 @@
+services:
+  nats:
+    image: nats:latest
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command: "-js -m 8222"
+
+  search-trends:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - NATS_URL=nats://nats:4222
+      - NATS_SUBJECT=search.events
+      - HTTP_PORT=8080
+    depends_on:
+      - nats
